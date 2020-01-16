@@ -22,7 +22,7 @@ public class SampleTest {
     public void testSelect() {
         System.out.println(("----- selectAll method test ------"));
         List<User> userList = userMapper.selectList(null);
-        Assert.assertEquals(5, userList.size());
+        Assert.assertEquals(6, userList.size());
         userList.forEach(System.out::println);
     }
 
