@@ -10,7 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -60,6 +62,23 @@ public class SelectTest {
         System.out.println(("----- 单表根据 id list 批量查询 ------"));
         List<Long> idsList = Arrays.asList(2L,4L,6L);
         List<User> userList= userMapper.selectBatchIds(idsList);
+        userList.forEach(System.out::println);
+    }
+
+     /*
+     * 描述：单表根据条件查询
+     * 作者：博客园-悟空聊架构
+     * 时间：2019-01-19
+     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
+     * 博客园：https://www.cnblogs.com/jackson0714
+     * */
+    @Test
+    public void testSelectByMap() {
+        System.out.println(("----- 单表根据条件查询 ------"));
+        Map<String, Object> conditions = new HashMap<>();
+        conditions.put("name", "Jack");
+        conditions.put("age", 20);
+        List<User> userList= userMapper.selectByMap(conditions);
         userList.forEach(System.out::println);
     }
 }
