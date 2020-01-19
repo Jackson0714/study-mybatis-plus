@@ -29,7 +29,7 @@ public class SampleTest {
     @Test
     public void testInsert() {
         User user = new User();
-        user.setName("张三");
+        //user.setName("张三");
         user.setAge(26);
         user.setEmail("a@126.com");
         int rows = userMapper.insert(user);

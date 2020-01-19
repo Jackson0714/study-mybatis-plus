@@ -16,13 +16,13 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SelectTest {
+public class NormalSelectTest {
 
     @Autowired
     private UserMapper userMapper;
 
     /*
-    * 描述：单表查询所有记录
+    * 描述：例1.单表查询所有记录
     * 作者：博客园-悟空聊架构
     * 时间：2019-01-16
     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
@@ -30,14 +30,14 @@ public class SelectTest {
     * */
     @Test
     public void testSelect() {
-        System.out.println(("----- 单表查询所有记录------"));
+        System.out.println(("----- 2.1 单表查询所有记录------"));
         List<User> userList = userMapper.selectList(null);
         Assert.assertEquals(6, userList.size()); //表里面的记录总条数是否等于6，如果等于6，则测试通过
         userList.forEach(System.out::println);
     }
 
     /*
-     * 描述：单表根据主键id查询单条记录
+     * 描述：例2.单表根据主键id查询单条记录
      * 作者：博客园-悟空聊架构
      * 时间：2019-01-16
      * Github：https://github.com/Jackson0714/study-mybatis-plus.git
@@ -51,7 +51,7 @@ public class SelectTest {
     }
 
     /*
-     * 描述：单表根据 id list 批量查询
+     * 描述：例3.单表根据 id list 批量查询
      * 作者：博客园-悟空聊架构
      * 时间：2019-01-16
      * Github：https://github.com/Jackson0714/study-mybatis-plus.git
@@ -66,7 +66,7 @@ public class SelectTest {
     }
 
      /*
-     * 描述：单表根据条件查询
+     * 描述：例4.单表根据条件查询
      * 作者：博客园-悟空聊架构
      * 时间：2019-01-19
      * Github：https://github.com/Jackson0714/study-mybatis-plus.git
@@ -76,7 +76,7 @@ public class SelectTest {
     public void testSelectByMap() {
         System.out.println(("----- 单表根据条件查询 ------"));
         Map<String, Object> conditions = new HashMap<>();
-        conditions.put("name", "Jack");
+        conditions.put("namet", "Jack");
         conditions.put("age", 20);
         List<User> userList= userMapper.selectByMap(conditions);
         userList.forEach(System.out::println);
