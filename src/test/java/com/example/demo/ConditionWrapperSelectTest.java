@@ -68,4 +68,24 @@ public class ConditionWrapperSelectTest {
         List<User> userList = userMapper.selectList(queryWrapper);
         userList.forEach(System.out::println);
     }
+
+    /*
+     * 描述：例1.4 查询创建日期为2020年1月15日并且直属上级的名字为“J”开头的
+     * SQL语句方案一：SELECT * FROM demo.user where date_format(create_time, '%Y-%m-%d') ='2020-01-15' AND manager_id in (select id from user where name like 'J%');
+     * SQL语句方案二：SELECT user1.* FROM demo.user AS user1 INNER JOIN demo.user AS user2 ON user1.manager_id = user2.id WHERE date_format(user1.create_time, '%Y-%m-%d') ='2020-01-15' AND user2.name LIKE 'J%'
+     * 作者：博客园-悟空聊架构
+     * 时间：2019-01-29
+     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
+     * 博客园：https://www.cnblogs.com/jackson0714
+     * */
+    @Test
+    public void testSelectByQueryWrapper4() {
+        System.out.println(("----- 查询创建日期为2020年1月15日并且直属上级的名字为“J”开头的 ------"));
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        //queryWrapper.apply("date_format(create_time, '%Y-%m-%d')='2020-01-15' or true or true")
+        queryWrapper.apply("date_format(create_time, '%Y-%m-%d')={0}","2020-01-15")
+                .inSql("manager_id", "select id from user where name like 'J%'");
+        List<User> userList = userMapper.selectList(queryWrapper);
+        userList.forEach(System.out::println);
+    }
 }
