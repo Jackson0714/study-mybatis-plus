@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -82,9 +83,60 @@ public class ConditionWrapperSelectTest {
     public void testSelectByQueryWrapper4() {
         System.out.println(("----- 查询创建日期为2020年1月15日并且直属上级的名字为“J”开头的 ------"));
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        //queryWrapper.apply("date_format(create_time, '%Y-%m-%d')='2020-01-15' or true or true")
+        //queryWrapper.apply("date_format(create_time, '%Y-%m-%d')='2020-01-15' or true or true") // SQL注入
         queryWrapper.apply("date_format(create_time, '%Y-%m-%d')={0}","2020-01-15")
                 .inSql("manager_id", "select id from user where name like 'J%'");
+        List<User> userList = userMapper.selectList(queryWrapper);
+        userList.forEach(System.out::println);
+    }
+
+    /*
+     * 描述：例1.5 查询名字为"J"开头并且满足条件：年龄小于20或邮箱不为空
+     * SQL语句：SELECT id,name,age,email,manager_id,create_time FROM user WHERE (name LIKE 'J%' AND ( (age < 20 OR email IS NOT NULL) ))
+     * 作者：博客园-悟空聊架构
+     * 时间：2019-01-31
+     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
+     * 博客园：https://www.cnblogs.com/jackson0714
+     * */
+    @Test
+    public void testSelectByQueryWrapper5() {
+        System.out.println(("----- 名字为'J'开头并且（年龄小于20或邮箱不为空） ------"));
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.likeRight("name", "J").and(qw->qw.lt("age", 20).or().isNotNull("email"));
+        List<User> userList = userMapper.selectList(queryWrapper);
+        userList.forEach(System.out::println);
+    }
+
+    /*
+     * 描述：例1.7 查询年龄为20、21、25、26的用户
+     * SQL语句：SELECT id,name,age,email,manager_id,create_time FROM user WHERE age IN (20,21,25,26)
+     * 作者：博客园-悟空聊架构
+     * 时间：2019-01-31
+     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
+     * 博客园：https://www.cnblogs.com/jackson0714
+     * */
+    @Test
+    public void testSelectByQueryWrapper7() {
+        System.out.println(("----- 名字为'J'开头并且（年龄小于20或邮箱不为空） ------"));
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("age", Arrays.asList(20,21,25,26));
+        List<User> userList = userMapper.selectList(queryWrapper);
+        userList.forEach(System.out::println);
+    }
+
+    /*
+     * 描述：例1.8 查询年龄为20、21、25、26的用户，且只需返回第一条记录
+     * SQL语句：SELECT id,name,age,email,manager_id,create_time FROM user WHERE age IN (20,21,25,26) limit 1
+     * 作者：博客园-悟空聊架构
+     * 时间：2019-01-31
+     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
+     * 博客园：https://www.cnblogs.com/jackson0714
+     * */
+    @Test
+    public void testSelectByQueryWrapper8() {
+        System.out.println(("----- 查询年龄为20、21、25、26的用户，且只需返回第一条记录 ------"));
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("age", Arrays.asList(20,21,25,26)).last("limit 1");
         List<User> userList = userMapper.selectList(queryWrapper);
         userList.forEach(System.out::println);
     }
