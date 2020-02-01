@@ -140,4 +140,41 @@ public class ConditionWrapperSelectTest {
         List<User> userList = userMapper.selectList(queryWrapper);
         userList.forEach(System.out::println);
     }
+
+    /*
+     * 描述：例1.9 查询年龄为20、21、25、26的用户，且只返回id和name字段
+     * SQL语句：SELECT id,name FROM user WHERE age IN (20,21,25,26)
+     * 作者：博客园-悟空聊架构
+     * 时间：2019-02-01
+     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
+     * 博客园：https://www.cnblogs.com/jackson0714
+     * */
+    @Test
+    public void testSelectByQueryWrapper9() {
+        System.out.println(("----- 查询年龄为20、21、25、26的用户，且只返回id和name字段 ------"));
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("age", Arrays.asList(20,21,25,26)).select("id","name"); // 针对字段少的情况
+        List<User> userList = userMapper.selectList(queryWrapper);
+        userList.forEach(System.out::println);
+    }
+
+    /*
+     * 描述：例1.10 查询年龄为20、21、25、26的用户，且只返回id、name、manager_id 字段
+     * SQL语句：SELECT id,name,manager_id FROM user WHERE age IN (20,21,25,26)
+     * 作者：博客园-悟空聊架构
+     * 时间：2019-02-01
+     * Github：https://github.com/Jackson0714/study-mybatis-plus.git
+     * 博客园：https://www.cnblogs.com/jackson0714
+     * */
+    @Test
+    public void testSelectByQueryWrapper10() {
+        System.out.println(("----- 查询年龄为20、21、25、26的用户，且只返回id、name、manager_id 字段 ------"));
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("age", Arrays.asList(20,21,25,26)) // 针对字段多的情况，用排除字段的方式
+                .select(User.class, info->!info.getColumn()
+                        .equals(("email")) && !info.getColumn().equals("create_time"));
+
+        List<User> userList = userMapper.selectList(queryWrapper);
+        userList.forEach(System.out::println);
+    }
 }
